@@ -114,6 +114,7 @@ void get_times(byte& Hour, byte& Minute, byte& Second) {
 }
 
 bool send_time(){
+      radio.stopListening();
       get_times( Hour, Minute, Second);
       sendByte = get_time;
       bool send_state = true;
@@ -127,6 +128,7 @@ bool send_time(){
        sendByte = failed;
        radio.write( sendByte, sizeof(sendByte));
       }
+      radio.startListening();
       return send_state;
 }
 void set_time(DS3231 &Clock, byte Hour, byte Minute, byte Second){
@@ -141,6 +143,7 @@ void loop() {
 
     radio.read( &gotByte, 1);
     radio.writeAckPayload(pipeNo,&gotByte, sizeof(gotByte) );  
+    
     if(gotByte == def){
       
     }else if(gotByte == get_state_all){
